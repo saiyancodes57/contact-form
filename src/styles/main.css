@@ -1,0 +1,21 @@
+@import url('./variables.css');
+
+html,
+body,
+#app {
+  min-height: 100vh;
+}
+
+#app {
+  background-color: var(--color-green-200);
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 48rem) {
+  #app {
+    padding: 8rem 2.5rem;
+  }
+}

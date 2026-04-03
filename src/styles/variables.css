@@ -1,0 +1,85 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Karla';
+  src: url(../fonts/Karla-VariableFont_wght.ttf) format('truetype');
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+:root {
+  /* Greyscale */
+  --color-grey-900: #2a4144;
+  --color-grey-500: #86a2a5;
+  --color-white: #ffffff;
+
+  /* Greens */
+  --color-green-600: #0c7d69;
+  --color-green-200: #e0f1e8;
+
+  /* Status / Errors */
+  --color-red-errors: #d73c3c;
+
+  /* Font Family */
+  --font-family-base: 'Karla', sans-serif;
+
+  /* Font Weights */
+  --weight-regular: 400;
+  --weight-bold: 700;
+
+  /* Heading Styles (32px) */
+  --fs-heading: 2rem;
+  --lh-heading: 1;
+  --ls-heading: -0.03125rem;
+
+  /* Body MD Styles (18px) */
+  --fs-body-md: 1.125rem;
+  --lh-body-md: 1.5;
+  --ls-body-md: 0rem;
+
+  /* Body SM Styles (16px) */
+  --fs-body-sm: 1rem;
+  --lh-body-sm: 1.5;
+  --ls-body-sm: 0rem;
+}
+
+/* --- Utility Classes --- */
+
+.text-heading {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-heading);
+  font-weight: var(--weight-bold);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+  color: var(--color-grey-900);
+}
+
+.text-body-md-bold {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-body-md);
+  font-weight: var(--weight-bold);
+  line-height: var(--lh-body-md);
+  letter-spacing: var(--ls-body-md);
+}
+
+.text-body-md-regular {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-body-md);
+  font-weight: var(--weight-regular);
+  line-height: var(--lh-body-md);
+  letter-spacing: var(--ls-body-md);
+}
+
+.text-body-sm {
+  font-family: var(--font-family-base);
+  font-size: var(--fs-body-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--lh-body-sm);
+  letter-spacing: var(--ls-body-sm);
+}
