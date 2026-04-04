@@ -1,16 +1,24 @@
 <script setup>
+import { ref } from 'vue'
 import FormInput from './components/FormInput.vue'
+
+const firstName = ref('')
+const lastName = ref('')
+const email = ref('')
+const queryType = ref('')
+const message = ref('')
+const consent = ref(false)
 </script>
 
 <template>
   <form>
     <h1 class="text-heading">Contact Us</h1>
     <div class="form-group">
-      <FormInput label="First Name" id="first-name" />
-      <FormInput label="Last Name" id="last-name" />
+      <FormInput label="First Name" id="first-name" v-model="firstName" />
+      <FormInput label="Last Name" id="last-name" v-model="lastName" />
     </div>
     <div class="form-group">
-      <FormInput label="Email" id="email" />
+      <FormInput label="Email" id="email" v-model="email" />
     </div>
     <fieldset class="form-group">
       <legend class="text-body-sm">Query Type<span class="star">*</span></legend>
@@ -20,12 +28,16 @@ import FormInput from './components/FormInput.vue'
           id="general-enquiry"
           input-type="radio"
           name="query-type"
+          value="general-enquiry"
+          v-model="queryType"
         />
         <FormInput
           label="Support Request"
           id="support-request"
           input-type="radio"
           name="query-type"
+          value="support-request"
+          v-model="queryType"
         />
       </div>
     </fieldset>
@@ -33,7 +45,7 @@ import FormInput from './components/FormInput.vue'
     <div class="form-group">
       <div class="input-group">
         <label for="message" class="text-body-sm">Message<span class="star">*</span></label>
-        <textarea name="message" rows="8" id="message"></textarea>
+        <textarea name="message" rows="8" id="message" v-model="message"></textarea>
       </div>
     </div>
 
@@ -42,6 +54,7 @@ import FormInput from './components/FormInput.vue'
         label="I consent to being contacted by the team"
         id="consent"
         input-type="checkbox"
+        v-model="consent"
       />
     </div>
     <button type="submit" class="text-body-sm">Submit</button>
@@ -76,6 +89,8 @@ form {
 
 .input-group:has(input[type='radio']) {
   gap: 1rem;
+  display: flex;
+  flex: 1;
 }
 
 .form-group {
@@ -97,6 +112,11 @@ textarea {
   border-radius: 0.5rem;
   font-family: 'Karla', sans-serif;
   padding: 0.5rem;
+  border: 1px solid var(--color-grey-500);
+
+  &:hover {
+    border-color: var(--color-green-600);
+  }
 }
 
 button {
@@ -106,6 +126,10 @@ button {
   background-color: var(--color-green-600);
   border: none;
   border-radius: 0.5rem;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-green-600), black 50%);
+  }
 }
 
 @media (min-width: 48rem) {
@@ -116,6 +140,10 @@ button {
 
   .form-group > * {
     flex: 1;
+  }
+
+  .input-group:has(input[type='radio']) {
+    flex-direction: row;
   }
 }
 </style>
