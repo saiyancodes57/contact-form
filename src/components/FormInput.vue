@@ -52,6 +52,10 @@ function validate() {
 const errorMessage = computed(() => {
   return errorMessages[props.inputType]
 })
+
+const selectedRadio = computed(() => {
+  return model.value === props.value
+})
 </script>
 
 <template>
@@ -86,7 +90,7 @@ const errorMessage = computed(() => {
   </div>
 
   <div v-else class="input-group">
-    <label :for="id" class="text-body-sm radio-container">
+    <label :for="id" class="text-body-sm radio-container" :class="{ selected: selectedRadio }">
       <input
         :type="inputType"
         :id="id"
@@ -133,7 +137,6 @@ input:not([type='radio'], [type='checkbox']) {
 }
 
 .input-group:has(input[type='radio']) label {
-  border: 1px solid var(--color-grey-500);
   width: 100%;
 
   &:hover {
@@ -149,5 +152,14 @@ input:not([type='radio'], [type='checkbox']) {
   align-items: center;
   padding: 1rem;
   gap: 1rem;
+}
+
+.radio-container.selected {
+  background-color: var(--color-green-200);
+  border-color: var(--color-green-600);
+}
+
+.radio-container.selected:has(input[type='radio']) {
+  accent-color: var(--color-green-600);
 }
 </style>
