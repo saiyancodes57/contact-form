@@ -1,111 +1,151 @@
 <script setup>
-import { ref, computed } from 'vue'
-import FormInput from './components/FormInput.vue'
+import { ref, watch } from 'vue'
 import errorMessages from '@/errorMessages.json'
 import SuccessMessage from './components/SuccessMessage.vue'
-const firstName = ref('')
-const lastName = ref('')
-const email = ref('')
-const queryType = ref('')
-const message = ref('')
-const consent = ref(false)
-const queryTypeTouched = ref(false)
-const textareaError = ref(false)
+import SharedContainerSlot from './components/SharedContainerSlot.vue'
+import BaseFormInput from './components/BaseFormInput.vue'
+import FormRadioInput from './components/FormRadioInput.vue'
+import TextAreaComp from './components/TextAreaComp.vue'
+import FormCheckbox from './components/FormCheckbox.vue'
 
-const queryTypeHasError = computed(() => {
-  return queryTypeTouched.value && queryType.value === ''
+const form = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  queryType: '',
+  message: '',
+  consent: false,
 })
 
-function validateTextArea() {
-  textareaError.value = message.value?.trim() === ''
+// Return true if valid, return error if invalid
+const validators = {
+  firstName: (val) => val.trim() !== '' || errorMessages.firstName,
+  lastName: (val) => val.trim() !== '' || errorMessages.lastName,
+  email: (val) => (val.trim() !== '' && val.includes('@')) || errorMessages.email,
+  queryType: (val) =>
+    ['general-enquiry', 'support-request'].includes(val) || errorMessages.queryType,
+  message: (val) => val.trim() !== '' || errorMessages.message,
+  consent: (val) => val === true || errorMessages.consent,
 }
 
+const errors = ref({
+  firstName: '',
+  lastName: '',
+  email: '',
+  queryType: '',
+  message: '',
+  consent: '',
+})
+
+// Takes a specific field and uses the validator function to return true OR empty string
+function validate(field) {
+  const result = validators[field](form.value[field])
+  errors.value[field] = result === true ? '' : result
+}
+
+watch(
+  form,
+  () => {
+    for (const field in errors.value) {
+      if (errors.value[field]) validate(field)
+    }
+  },
+  { deep: true },
+)
+
 const showToast = ref(false)
+
 function handleSubmit() {
-  // manual validations
-  validateTextArea()
-  queryTypeTouched.value = true
-  const isFormValid = !textareaError.value && !queryTypeHasError.value && consent.value
-
-  if (isFormValid) {
+  let isValid = true
+  for (const field of Object.keys(form.value)) {
+    validate(field)
+    if (errors.value[field]) {
+      isValid = false
+    }
+  }
+  if (isValid) {
+    console.log('Form is ready to be submitted')
     showToast.value = true
-
-    // Auto-hide after 5 seconds
     setTimeout(() => {
       showToast.value = false
     }, 5000)
-
-    // Scroll to top so they see the message
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+  } else {
+    console.log('Submission blocked: errors still exist.')
   }
+
+  return isValid
 }
 </script>
 
+<!-- Need to add accessibility for required fields, error messages, and toast! -->
 <template>
   <SuccessMessage :show="showToast" />
   <main>
+    <h1 class="text-heading">Contact Us</h1>
     <form @submit.prevent="handleSubmit">
-      <h1 class="text-heading">Contact Us</h1>
-      <div class="form-group">
-        <FormInput label="First Name" id="first-name" v-model="firstName" />
-        <FormInput label="Last Name" id="last-name" v-model="lastName" />
-      </div>
-      <div class="form-group">
-        <FormInput label="Email" id="email" input-type="email" v-model="email" />
-      </div>
-      <fieldset class="form-group">
-        <legend class="text-body-sm">Query Type<span class="star">*</span></legend>
-        <div class="radio-wrapper">
-          <div class="input-group">
-            <FormInput
-              label="General Enquiry"
-              id="general-enquiry"
-              input-type="radio"
-              name="query-type"
-              value="general-enquiry"
-              v-model="queryType"
-              @blur-emit="queryTypeTouched = true"
-            />
-            <FormInput
-              label="Support Request"
-              id="support-request"
-              input-type="radio"
-              name="query-type"
-              value="support-request"
-              v-model="queryType"
-              @blur-emit="queryTypeTouched = true"
-            />
-          </div>
-          <p v-if="queryTypeHasError" class="text-body-sm error error-text">
-            {{ errorMessages.radio }}
-          </p>
-        </div>
-      </fieldset>
-
-      <div class="form-group">
-        <div class="input-group">
-          <label for="message" class="text-body-sm">Message<span class="star">*</span></label>
-          <textarea
-            name="message"
-            rows="8"
-            id="message"
-            v-model="message"
-            required
-            :class="{ 'textarea-error': textareaError }"
-            @blur="validateTextArea"
-          ></textarea>
-          <p v-if="textareaError" class="text-body-sm error-text">{{ errorMessages.text }}</p>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <FormInput
-          label="I consent to being contacted by the team"
-          id="consent"
-          input-type="checkbox"
-          v-model="consent"
+      <SharedContainerSlot>
+        <BaseFormInput
+          label-text="First Name"
+          id="first-name"
+          input-type="text"
+          autocomplete="given-name"
+          v-model="form.firstName"
+          :error="errors.firstName"
+          @blur-event="validate('firstName')"
         />
-      </div>
+        <BaseFormInput
+          label-text="Last Name"
+          id="last-name"
+          input-type="text"
+          autocomplete="family-name"
+          v-model="form.lastName"
+          :error="errors.lastName"
+          @blur-event="validate('lastName')"
+        />
+      </SharedContainerSlot>
+      <BaseFormInput
+        input-type="email"
+        id="email"
+        label-text="Email"
+        autocomplete="email"
+        v-model="form.email"
+        :error="errors.email"
+        @blur-event="validate('email')"
+      />
+      <fieldset>
+        <legend class="text-body-sm">Query Type<span class="star">*</span></legend>
+        <SharedContainerSlot>
+          <FormRadioInput
+            label-text="General Enquiry"
+            value="general-enquiry"
+            name="query-type"
+            v-model="form.queryType"
+            @blur-event="validate('queryType')"
+          />
+          <FormRadioInput
+            label-text="Support Request"
+            value="support-request"
+            name="query-type"
+            v-model="form.queryType"
+            @blur-event="validate('queryType')"
+          />
+        </SharedContainerSlot>
+        <p class="error-text">{{ errors.queryType }}</p>
+      </fieldset>
+      <TextAreaComp
+        label-text="Message"
+        id="message"
+        v-model="form.message"
+        :error="errors.message"
+        @blur-event="validate('message')"
+      />
+      <FormCheckbox
+        name="consent"
+        label-text="I consent to being contacted by the team"
+        v-model="form.consent"
+        :error="errors.consent"
+        @blur-event="validate('consent')"
+      />
       <button type="submit" class="text-body-sm">Submit</button>
     </form>
   </main>
@@ -114,6 +154,7 @@ function handleSubmit() {
 <style scoped>
 h1 {
   color: var(--color-grey-900);
+  margin-bottom: 2rem;
 }
 
 main {
@@ -124,60 +165,19 @@ main {
   max-width: 46rem;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.input-group:has(textarea) {
-  gap: 0.5rem;
-}
-
-.input-group:has(input[type='radio']) {
-  gap: 1rem;
-  display: flex;
-  flex: 1;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
 fieldset {
   border: none;
 }
 
 legend {
-  margin-bottom: 1rem;
   color: var(--color-grey-900);
+  margin-bottom: 1rem;
 }
 
-.error {
-  margin-top: 0.5rem;
-}
-
-textarea {
-  border-radius: 0.5rem;
-  font-family: 'Karla', sans-serif;
-  padding: 0.5rem;
-  border: 1px solid var(--color-grey-500);
-  resize: none;
-  &:hover {
-    border-color: var(--color-green-600);
-  }
-}
-
-.textarea-error {
-  border: 1px solid var(--color-red-errors);
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 button {
@@ -192,26 +192,23 @@ button {
     background-color: color-mix(in srgb, var(--color-green-600), black 50%);
   }
 }
-
-@media (min-width: 48rem) {
-  .form-group:not(:has(textarea)) {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .form-group > * {
-    flex: 1;
-  }
-
-  .input-group:has(input[type='radio']) {
-    flex-direction: row;
-  }
-}
 </style>
 
 <style>
+input {
+  border-radius: 0.5rem;
+  height: 3rem;
+  border: 1px solid var(--color-grey-500);
+}
+
+div:has(input[type='text'], input[type='email'], textarea) label {
+  margin-bottom: 0.5rem;
+}
+
 .error-text {
   color: var(--color-red-errors);
+  font-family: Karla;
+  margin-top: 0.5rem;
 }
 .star {
   margin-left: 0.5rem;

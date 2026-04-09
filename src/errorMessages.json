@@ -1,6 +1,8 @@
 {
-  "text": "This field is required",
+  "firstName": "This field is required",
+  "lastName": "This field is required",
   "email": "Please enter a valid email address",
-  "radio": "Please select a query type",
-  "checkbox": "To submit this form, please consent to being contacted"
+  "queryType": "Please select a query type",
+  "message": "This field is required",
+  "consent": "To submit this form, please consent to being contacted"
 }
