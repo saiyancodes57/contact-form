@@ -8,7 +8,7 @@ defineProps({
 
 <template>
   <Transition name="toast">
-    <div v-if="show" class="message-sent">
+    <div v-if="show" class="message-sent" aria-live="polite">
       <div class="top">
         <img :src="IconSuccess" alt="" />
         <p class="text-body-sm">Message Sent</p>

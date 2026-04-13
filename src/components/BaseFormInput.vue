@@ -1,17 +1,16 @@
 <script setup>
-// import { ref } from 'vue'
+import { useId } from 'vue'
 defineEmits(['blur-event'])
 const model = defineModel()
+const id = useId()
+const errorId = useId()
+
 defineProps({
-  labelText: {
+  label: {
     type: String,
     required: true,
   },
-  id: {
-    type: String,
-    required: true,
-  },
-  inputType: {
+  type: {
     type: String,
     default: 'text',
   },
@@ -26,16 +25,19 @@ defineProps({
 
 <template>
   <div>
-    <label :for="id" class="text-body-sm">{{ labelText }}<span class="star">*</span></label>
+    <label :for="id" class="text-body-sm"
+      >{{ label }}<span class="star" aria-hidden="true">*</span></label
+    >
     <input
-      :type="inputType"
+      :type="type"
       :id="id"
       v-model="model"
       :autocomplete="autocomplete"
       @blur="$emit('blur-event')"
-      required
+      :aria-describedby="error ? errorId : undefined"
+      :aria-invalid="!!error"
     />
-    <p class="error-text">{{ error }}</p>
+    <p class="error-text" :id="errorId" aria-live="assertive">{{ error }}</p>
   </div>
 </template>
 

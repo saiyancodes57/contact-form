@@ -1,12 +1,12 @@
 <script setup>
+import { useId } from 'vue'
+
 const model = defineModel()
 defineEmits(['blur-event'])
+const id = useId()
+const errorId = useId()
 defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-  labelText: {
+  label: {
     type: String,
     required: true,
   },
@@ -18,9 +18,19 @@ defineProps({
 
 <template>
   <div class="textarea">
-    <label :for="id" class="text-body-sm">{{ labelText }}<span class="star">*</span></label>
-    <textarea :id="id" rows="7" v-model="model" @blur="$emit('blur-event')" required></textarea>
-    <p class="error-text">{{ error }}</p>
+    <label :for="id" class="text-body-sm"
+      >{{ label }}<span class="star" aria-hidden="true">*</span></label
+    >
+    <textarea
+      :id="id"
+      rows="7"
+      v-model="model"
+      @blur="$emit('blur-event')"
+      :aria-describedby="error ? errorId : undefined"
+      :aria-invalid="!!error"
+      required
+    ></textarea>
+    <p class="error-text" :id="errorId">{{ error }}</p>
   </div>
 </template>
 

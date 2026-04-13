@@ -37,6 +37,11 @@ const errors = ref({
   consent: '',
 })
 
+const queryOptions = [
+  { value: 'general-enquiry', label: 'General Enquiry' },
+  { value: 'support-request', label: 'Support Request' },
+]
+
 // Takes a specific field and uses the validator function to return true OR empty string
 function validate(field) {
   const result = validators[field](form.value[field])
@@ -77,26 +82,23 @@ function handleSubmit() {
 }
 </script>
 
-<!-- Need to add accessibility for required fields, error messages, and toast! -->
 <template>
   <SuccessMessage :show="showToast" />
   <main>
     <h1 class="text-heading">Contact Us</h1>
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="handleSubmit" novalidate>
       <SharedContainerSlot>
         <BaseFormInput
-          label-text="First Name"
-          id="first-name"
-          input-type="text"
+          label="First Name"
+          type="text"
           autocomplete="given-name"
           v-model="form.firstName"
           :error="errors.firstName"
           @blur-event="validate('firstName')"
         />
         <BaseFormInput
-          label-text="Last Name"
-          id="last-name"
-          input-type="text"
+          label="Last Name"
+          type="text"
           autocomplete="family-name"
           v-model="form.lastName"
           :error="errors.lastName"
@@ -104,44 +106,29 @@ function handleSubmit() {
         />
       </SharedContainerSlot>
       <BaseFormInput
-        input-type="email"
-        id="email"
-        label-text="Email"
+        label="Email"
+        type="email"
         autocomplete="email"
         v-model="form.email"
         :error="errors.email"
         @blur-event="validate('email')"
       />
-      <fieldset>
-        <legend class="text-body-sm">Query Type<span class="star">*</span></legend>
-        <SharedContainerSlot>
-          <FormRadioInput
-            label-text="General Enquiry"
-            value="general-enquiry"
-            name="query-type"
-            v-model="form.queryType"
-            @blur-event="validate('queryType')"
-          />
-          <FormRadioInput
-            label-text="Support Request"
-            value="support-request"
-            name="query-type"
-            v-model="form.queryType"
-            @blur-event="validate('queryType')"
-          />
-        </SharedContainerSlot>
-        <p class="error-text">{{ errors.queryType }}</p>
-      </fieldset>
+      <FormRadioInput
+        name="query-type"
+        :options="queryOptions"
+        v-model="form.queryType"
+        :error="errors.queryType"
+        @blur-event="validate('queryType')"
+      />
       <TextAreaComp
-        label-text="Message"
-        id="message"
+        label="Message"
         v-model="form.message"
         :error="errors.message"
         @blur-event="validate('message')"
       />
       <FormCheckbox
         name="consent"
-        label-text="I consent to being contacted by the team"
+        label="I consent to being contacted by the team"
         v-model="form.consent"
         :error="errors.consent"
         @blur-event="validate('consent')"

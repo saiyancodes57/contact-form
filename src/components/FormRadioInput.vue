@@ -1,27 +1,39 @@
 <script setup>
 defineEmits(['blur-event'])
+import { useId } from 'vue'
+import SharedContainerSlot from './SharedContainerSlot.vue'
 const model = defineModel()
+const errorId = useId()
 defineProps({
-  labelText: {
-    type: String,
-    required: true,
-  },
-  value: {
-    type: String,
+  options: {
+    type: Array,
     required: true,
   },
   name: {
     type: String,
     required: true,
   },
+  error: {
+    type: String,
+  },
 })
 </script>
 
 <template>
-  <label class="text-body-sm">
-    <input type="radio" :value="value" :name="name" v-model="model" @blur="$emit('blur-event')" />
-    {{ labelText }}
-  </label>
+  <fieldset
+    @focusout="$emit('blur-event')"
+    :aria-describedby="error ? errorId : undefined"
+    :aria-invalid="!!error"
+  >
+    <legend class="text-body-sm">Query Type<span class="star" aria-hidden="true">*</span></legend>
+    <SharedContainerSlot>
+      <label v-for="option in options" :key="option.value" class="text-body-sm">
+        <input type="radio" :value="option.value" :name="name" v-model="model" />
+        {{ option.label }}
+      </label>
+    </SharedContainerSlot>
+    <p class="error-text" :id="errorId">{{ error }}</p>
+  </fieldset>
 </template>
 
 <style scoped>

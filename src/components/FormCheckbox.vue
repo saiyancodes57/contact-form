@@ -1,8 +1,11 @@
 <script setup>
+import { useId } from 'vue'
+
 const model = defineModel()
 defineEmits(['blur-event'])
+const errorId = useId()
 defineProps({
-  labelText: {
+  label: {
     type: String,
     required: true,
   },
@@ -19,10 +22,17 @@ defineProps({
 <template>
   <div class="consent-checkbox">
     <label class="text-body-sm">
-      <input type="checkbox" :name="name" v-model="model" @blur="$emit('blur-event')" />
-      {{ labelText }}<span>*</span>
+      <input
+        type="checkbox"
+        :name="name"
+        v-model="model"
+        @blur="$emit('blur-event')"
+        :aria-describedby="error ? errorId : undefined"
+        :aria-invalid="!!error"
+      />
+      {{ label }}<span aria-hidden="true">*</span>
     </label>
-    <p class="error-text">{{ error }}</p>
+    <p class="error-text" :id="errorId">{{ error }}</p>
   </div>
 </template>
 
