@@ -1,9 +1,12 @@
 <script setup>
-import { useId } from 'vue'
+import { useId, useTemplateRef } from 'vue'
+import ErrorComponent from './ErrorComponent.vue'
+
 defineEmits(['blur-event'])
 const model = defineModel()
 const id = useId()
 const errorId = useId()
+const input = useTemplateRef('input')
 
 defineProps({
   label: {
@@ -21,6 +24,14 @@ defineProps({
     type: String,
   },
 })
+
+function focusInput() {
+  input.value?.focus()
+}
+
+defineExpose({
+  focusInput,
+})
 </script>
 
 <template>
@@ -36,8 +47,10 @@ defineProps({
       @blur="$emit('blur-event')"
       :aria-describedby="error ? errorId : undefined"
       :aria-invalid="!!error"
+      ref="input"
+      required
     />
-    <p class="error-text" :id="errorId" aria-live="assertive">{{ error }}</p>
+    <ErrorComponent :label="label" :error="error" :error-id="errorId" />
   </div>
 </template>
 

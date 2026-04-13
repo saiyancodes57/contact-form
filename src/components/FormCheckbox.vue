@@ -1,5 +1,6 @@
 <script setup>
 import { useId } from 'vue'
+import ErrorComponent from './ErrorComponent.vue'
 
 const model = defineModel()
 defineEmits(['blur-event'])
@@ -29,10 +30,12 @@ defineProps({
         @blur="$emit('blur-event')"
         :aria-describedby="error ? errorId : undefined"
         :aria-invalid="!!error"
+        required
       />
       {{ label }}<span aria-hidden="true">*</span>
     </label>
-    <p class="error-text" :id="errorId">{{ error }}</p>
+    <!-- <p class="error-text" :id="errorId">{{ error }}</p>-->
+    <ErrorComponent :label="label" :error="error" :error-id="errorId" />
   </div>
 </template>
 

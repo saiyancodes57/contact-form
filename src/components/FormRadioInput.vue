@@ -1,10 +1,16 @@
 <script setup>
-defineEmits(['blur-event'])
+const emit = defineEmits(['blur-event'])
 import { useId } from 'vue'
 import SharedContainerSlot from './SharedContainerSlot.vue'
+import ErrorComponent from './ErrorComponent.vue'
+
 const model = defineModel()
 const errorId = useId()
 defineProps({
+  legend: {
+    type: String,
+    required: true,
+  },
   options: {
     type: Array,
     required: true,
@@ -17,22 +23,33 @@ defineProps({
     type: String,
   },
 })
+
+function onFocusOut(event) {
+  const next = event.relatedTarget
+
+  if (!next || !event.currentTarget.contains(next)) {
+    emit('blur-event')
+  }
+}
 </script>
 
 <template>
-  <fieldset
-    @focusout="$emit('blur-event')"
-    :aria-describedby="error ? errorId : undefined"
-    :aria-invalid="!!error"
-  >
-    <legend class="text-body-sm">Query Type<span class="star" aria-hidden="true">*</span></legend>
+  <fieldset @focusout="onFocusOut" :aria-invalid="!!error">
+    <legend class="text-body-sm">{{ legend }}<span class="star" aria-hidden="true">*</span></legend>
     <SharedContainerSlot>
-      <label v-for="option in options" :key="option.value" class="text-body-sm">
-        <input type="radio" :value="option.value" :name="name" v-model="model" />
+      <label v-for="(option, index) in options" :key="option.value" class="text-body-sm">
+        <input
+          type="radio"
+          :value="option.value"
+          :name="name"
+          v-model="model"
+          :aria-describedby="index === 0 && error ? errorId : undefined"
+          required
+        />
         {{ option.label }}
       </label>
     </SharedContainerSlot>
-    <p class="error-text" :id="errorId">{{ error }}</p>
+    <ErrorComponent :label="legend" :error="error" :error-id="errorId" />
   </fieldset>
 </template>
 

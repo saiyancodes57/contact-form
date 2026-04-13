@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, useTemplateRef } from 'vue'
 import errorMessages from '@/errorMessages.json'
 import SuccessMessage from './components/SuccessMessage.vue'
 import SharedContainerSlot from './components/SharedContainerSlot.vue'
@@ -59,6 +59,7 @@ watch(
 )
 
 const showToast = ref(false)
+const firstNameRef = useTemplateRef('first-name')
 
 function handleSubmit() {
   let isValid = true
@@ -76,6 +77,7 @@ function handleSubmit() {
     }, 5000)
   } else {
     console.log('Submission blocked: errors still exist.')
+    firstNameRef.value?.focusInput()
   }
 
   return isValid
@@ -95,6 +97,7 @@ function handleSubmit() {
           v-model="form.firstName"
           :error="errors.firstName"
           @blur-event="validate('firstName')"
+          ref="first-name"
         />
         <BaseFormInput
           label="Last Name"
@@ -114,6 +117,7 @@ function handleSubmit() {
         @blur-event="validate('email')"
       />
       <FormRadioInput
+        legend="Query Type"
         name="query-type"
         :options="queryOptions"
         v-model="form.queryType"
