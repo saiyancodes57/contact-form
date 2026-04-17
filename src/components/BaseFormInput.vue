@@ -25,7 +25,7 @@ const id = useId()
 const errorId = useId()
 const input = useTemplateRef('input')
 
-// focus on the ref
+// Focus on the ref
 function focusInput() {
   input.value?.focus()
 }

@@ -44,7 +44,7 @@ function onFocusOut() {
   <fieldset
     @focusout="onFocusOut"
     ref="radio-fieldset"
-    :aria-describedby="index === 0 && error ? errorId : undefined"
+    :aria-describedby="error ? errorId : undefined"
     required
   >
     <legend class="text-body-md-regular">
