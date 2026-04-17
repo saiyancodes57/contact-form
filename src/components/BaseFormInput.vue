@@ -38,10 +38,11 @@ defineExpose({
 
 <template>
   <div>
-    <label :for="id" class="text-body-sm"
+    <label :for="id" class="text-body-md-regular"
       >{{ label }}<span class="star" aria-hidden="true">*</span></label
     >
     <input
+      class="text-body-md-regular"
       :type="type"
       :id="id"
       v-model="model"

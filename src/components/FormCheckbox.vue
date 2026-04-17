@@ -32,7 +32,7 @@ defineExpose({
 
 <template>
   <div class="consent-checkbox">
-    <label class="text-body-sm">
+    <label class="text-body-md-regular">
       <input
         type="checkbox"
         :name="name"

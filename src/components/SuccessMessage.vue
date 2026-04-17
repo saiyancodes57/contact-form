@@ -12,9 +12,9 @@ defineProps({
       <div v-if="show" class="message-sent">
         <div class="top">
           <img :src="IconSuccess" alt="" />
-          <p class="text-body-sm">Message Sent</p>
+          <p class="text-body-md-regular">Message Sent</p>
         </div>
-        <p class="text-body-sm">Thanks for completing the form. We'll be in touch soon!</p>
+        <p class="text-body-md-regular">Thanks for completing the form. We'll be in touch soon!</p>
       </div>
     </Transition>
   </div>

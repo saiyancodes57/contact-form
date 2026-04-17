@@ -29,12 +29,13 @@ defineExpose({
 
 <template>
   <div class="textarea">
-    <label :for="id" class="text-body-sm"
+    <label :for="id" class="text-body-md-regular"
       >{{ label }}<span class="star" aria-hidden="true">*</span></label
     >
     <textarea
+      class="text-body-md-regular"
       :id="id"
-      rows="7"
+      rows="6"
       v-model="model"
       @blur="$emit('blur-event')"
       :aria-describedby="error ? errorId : undefined"

@@ -47,9 +47,11 @@ function onFocusOut() {
     :aria-describedby="index === 0 && error ? errorId : undefined"
     required
   >
-    <legend class="text-body-sm">{{ legend }}<span class="star" aria-hidden="true">*</span></legend>
+    <legend class="text-body-md-regular">
+      {{ legend }}<span class="star" aria-hidden="true">*</span>
+    </legend>
     <SharedContainerSlot>
-      <label v-for="(option, index) in options" :key="option.value" class="text-body-sm">
+      <label v-for="(option, index) in options" :key="option.value" class="text-body-md-regular">
         <input
           type="radio"
           :value="option.value"
