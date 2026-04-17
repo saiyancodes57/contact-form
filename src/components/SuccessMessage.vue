@@ -7,15 +7,17 @@ defineProps({
 </script>
 
 <template>
-  <Transition name="toast">
-    <div v-if="show" class="message-sent" aria-live="polite">
-      <div class="top">
-        <img :src="IconSuccess" alt="" />
-        <p class="text-body-sm">Message Sent</p>
+  <div class="toast-wrapper" aria-live="polite" role="status">
+    <Transition name="toast">
+      <div v-if="show" class="message-sent">
+        <div class="top">
+          <img :src="IconSuccess" alt="" />
+          <p class="text-body-sm">Message Sent</p>
+        </div>
+        <p class="text-body-sm">Thanks for completing the form. We'll be in touch soon!</p>
       </div>
-      <p class="text-body-sm">Thanks for completing the form. We'll be in touch soon!</p>
-    </div>
-  </Transition>
+    </Transition>
+  </div>
 </template>
 
 <style scoped>

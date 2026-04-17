@@ -1,11 +1,8 @@
 <script setup>
-import { useId } from 'vue'
+import { useId, useTemplateRef } from 'vue'
 import ErrorComponent from './ErrorComponent.vue'
 
-const model = defineModel()
 defineEmits(['blur-event'])
-const id = useId()
-const errorId = useId()
 defineProps({
   label: {
     type: String,
@@ -14,6 +11,19 @@ defineProps({
   error: {
     type: String,
   },
+})
+
+const model = defineModel()
+const id = useId()
+const errorId = useId()
+const textarea = useTemplateRef('message')
+
+function focusInput() {
+  textarea.value?.focus()
+}
+
+defineExpose({
+  focusInput,
 })
 </script>
 
@@ -30,8 +40,8 @@ defineProps({
       :aria-describedby="error ? errorId : undefined"
       :aria-invalid="!!error"
       required
+      ref="message"
     ></textarea>
-    <!-- <p class="error-text" :id="errorId">{{ error }}</p> -->
     <ErrorComponent :label="label" :error="error" :error-id="errorId" />
   </div>
 </template>
@@ -44,6 +54,7 @@ div {
 
 textarea {
   border-radius: 0.5rem;
+  padding: 0.5rem;
   resize: vertical;
   border: 1px solid var(--color-grey-500);
 }

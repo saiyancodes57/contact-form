@@ -3,11 +3,6 @@ import { useId, useTemplateRef } from 'vue'
 import ErrorComponent from './ErrorComponent.vue'
 
 defineEmits(['blur-event'])
-const model = defineModel()
-const id = useId()
-const errorId = useId()
-const input = useTemplateRef('input')
-
 defineProps({
   label: {
     type: String,
@@ -25,10 +20,17 @@ defineProps({
   },
 })
 
+const model = defineModel()
+const id = useId()
+const errorId = useId()
+const input = useTemplateRef('input')
+
+// focus on the ref
 function focusInput() {
   input.value?.focus()
 }
 
+//Exposes the focus to the parent component
 defineExpose({
   focusInput,
 })
@@ -55,6 +57,10 @@ defineExpose({
 </template>
 
 <style scoped>
+input {
+  padding: 0.5rem;
+}
+
 div {
   display: flex;
   flex-direction: column;

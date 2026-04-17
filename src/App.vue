@@ -42,12 +42,6 @@ const queryOptions = [
   { value: 'support-request', label: 'Support Request' },
 ]
 
-// Takes a specific field and uses the validator function to return true OR empty string
-function validate(field) {
-  const result = validators[field](form.value[field])
-  errors.value[field] = result === true ? '' : result
-}
-
 watch(
   form,
   () => {
@@ -58,17 +52,45 @@ watch(
   { deep: true },
 )
 
-const showToast = ref(false)
+// Vue template ref definitions
 const firstNameRef = useTemplateRef('first-name')
+const lastNameRef = useTemplateRef('last-name')
+const emailRef = useTemplateRef('email')
+const queryTypeRef = useTemplateRef('query-type')
+const messageRef = useTemplateRef('message')
+const consentRef = useTemplateRef('consent')
 
+// Order of form fields
+const formOrder = ['firstName', 'lastName', 'email', 'queryType', 'message', 'consent']
+
+// Maps form fields to corresponding vue template refs
+const orderRefMapping = {
+  firstName: firstNameRef,
+  lastName: lastNameRef,
+  email: emailRef,
+  queryType: queryTypeRef,
+  message: messageRef,
+  consent: consentRef,
+}
+
+// Takes a specific field and uses the validator function to return true OR empty string
+function validate(field) {
+  const result = validators[field](form.value[field])
+  errors.value[field] = result === true ? '' : result
+}
+
+// Handling form submission
 function handleSubmit() {
   let isValid = true
+  // Validate each form field
   for (const field of Object.keys(form.value)) {
     validate(field)
+    // If error object contains error - form invalid
     if (errors.value[field]) {
       isValid = false
     }
   }
+
   if (isValid) {
     console.log('Form is ready to be submitted')
     showToast.value = true
@@ -76,12 +98,21 @@ function handleSubmit() {
       showToast.value = false
     }, 5000)
   } else {
+    // When not valid - go through form in order, find 1st error and focus() it.
+    for (const field of formOrder) {
+      if (errors.value[field]) {
+        orderRefMapping[field]?.value.focusInput()
+        break
+      }
+    }
     console.log('Submission blocked: errors still exist.')
-    firstNameRef.value?.focusInput()
   }
-
-  return isValid
+  // Do we need a return here? Not necessary I think!?
+  // return isValid
 }
+
+// Ref for showing toast
+const showToast = ref(false)
 </script>
 
 <template>
@@ -106,6 +137,7 @@ function handleSubmit() {
           v-model="form.lastName"
           :error="errors.lastName"
           @blur-event="validate('lastName')"
+          ref="last-name"
         />
       </SharedContainerSlot>
       <BaseFormInput
@@ -115,6 +147,7 @@ function handleSubmit() {
         v-model="form.email"
         :error="errors.email"
         @blur-event="validate('email')"
+        ref="email"
       />
       <FormRadioInput
         legend="Query Type"
@@ -123,12 +156,14 @@ function handleSubmit() {
         v-model="form.queryType"
         :error="errors.queryType"
         @blur-event="validate('queryType')"
+        ref="query-type"
       />
       <TextAreaComp
         label="Message"
         v-model="form.message"
         :error="errors.message"
         @blur-event="validate('message')"
+        ref="message"
       />
       <FormCheckbox
         name="consent"
@@ -136,6 +171,7 @@ function handleSubmit() {
         v-model="form.consent"
         :error="errors.consent"
         @blur-event="validate('consent')"
+        ref="consent"
       />
       <button type="submit" class="text-body-sm">Submit</button>
     </form>
@@ -160,11 +196,6 @@ fieldset {
   border: none;
 }
 
-legend {
-  color: var(--color-grey-900);
-  margin-bottom: 1rem;
-}
-
 form {
   display: flex;
   flex-direction: column;
@@ -178,6 +209,7 @@ button {
   background-color: var(--color-green-600);
   border: none;
   border-radius: 0.5rem;
+  outline-offset: 3px;
 
   &:hover {
     background-color: color-mix(in srgb, var(--color-green-600), black 50%);

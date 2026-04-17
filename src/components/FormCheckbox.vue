@@ -1,10 +1,8 @@
 <script setup>
-import { useId } from 'vue'
+import { useId, useTemplateRef } from 'vue'
 import ErrorComponent from './ErrorComponent.vue'
 
-const model = defineModel()
 defineEmits(['blur-event'])
-const errorId = useId()
 defineProps({
   label: {
     type: String,
@@ -17,6 +15,18 @@ defineProps({
   error: {
     type: String,
   },
+})
+
+const model = defineModel()
+const errorId = useId()
+const checkbox = useTemplateRef('checkbox')
+
+function focusInput() {
+  checkbox.value?.focus()
+}
+
+defineExpose({
+  focusInput,
 })
 </script>
 
@@ -31,10 +41,10 @@ defineProps({
         :aria-describedby="error ? errorId : undefined"
         :aria-invalid="!!error"
         required
+        ref="checkbox"
       />
       {{ label }}<span aria-hidden="true">*</span>
     </label>
-    <!-- <p class="error-text" :id="errorId">{{ error }}</p>-->
     <ErrorComponent :label="label" :error="error" :error-id="errorId" />
   </div>
 </template>
@@ -48,5 +58,10 @@ label {
 
 span {
   color: var(--color-green-600);
+}
+
+input[type='checkbox']:focus {
+  outline: 2px solid;
+  outline-offset: 2px;
 }
 </style>
