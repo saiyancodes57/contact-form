@@ -173,7 +173,7 @@ const showToast = ref(false)
         @blur-event="validate('consent')"
         ref="consent"
       />
-      <button type="submit" class="text-body-sm">Submit</button>
+      <button type="submit" class="text-body-md-bold">Submit</button>
     </form>
   </main>
 </template>
