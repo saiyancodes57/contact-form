@@ -60,6 +60,10 @@ defineExpose({
 <style scoped>
 input {
   padding: 0.5rem;
+
+  &:hover {
+    border-color: var(--color-green-600);
+  }
 }
 
 div {

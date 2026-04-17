@@ -59,5 +59,9 @@ textarea {
   resize: vertical;
   border: 1px solid var(--color-grey-500);
   font-family: 'Karla';
+
+  &:hover {
+    border-color: var(--color-green-600);
+  }
 }
 </style>

@@ -85,10 +85,17 @@ label {
     border: 1px solid var(--color-green-600);
     background-color: var(--color-green-200);
   }
+
+  &:hover {
+    border-color: var(--color-green-600);
+  }
 }
 input {
   accent-color: var(--color-green-600);
   width: 1.25rem;
+  &:hover {
+    border-color: var(--color-green-600);
+  }
 }
 
 fieldset[aria-invalid='true'] input[type='radio']:focus-visible {

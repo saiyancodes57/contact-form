@@ -60,7 +60,11 @@ span {
   color: var(--color-green-600);
 }
 
-input[type='checkbox'][aria-invalid='true']:focus-visible {
+input {
+  accent-color: var(--color-green-600);
+}
+
+input[aria-invalid='true']:focus-visible {
   outline: 2px solid;
   outline-offset: 2px;
 }
