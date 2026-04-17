@@ -17,7 +17,7 @@ defineProps({
 <template>
   <div :id="errorId">
     <template v-if="error">
-      <span class="visually-hidden">{{ label }} error</span>
+      <span v-if="!!label" class="visually-hidden">{{ label }} error</span>
       <span class="error-text">{{ error }}</span>
     </template>
   </div>

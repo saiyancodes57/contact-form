@@ -57,5 +57,6 @@ textarea {
   padding: 0.5rem;
   resize: vertical;
   border: 1px solid var(--color-grey-500);
+  font-family: 'Karla';
 }
 </style>

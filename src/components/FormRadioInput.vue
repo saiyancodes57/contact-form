@@ -41,7 +41,12 @@ function onFocusOut() {
 </script>
 
 <template>
-  <fieldset @focusout="onFocusOut" :aria-invalid="!!error" ref="radio-fieldset">
+  <fieldset
+    @focusout="onFocusOut"
+    ref="radio-fieldset"
+    :aria-describedby="index === 0 && error ? errorId : undefined"
+    required
+  >
     <legend class="text-body-sm">{{ legend }}<span class="star" aria-hidden="true">*</span></legend>
     <SharedContainerSlot>
       <label v-for="(option, index) in options" :key="option.value" class="text-body-sm">
@@ -50,9 +55,7 @@ function onFocusOut() {
           :value="option.value"
           :name="name"
           v-model="model"
-          :aria-describedby="index === 0 && error ? errorId : undefined"
           :ref="index === 0 ? 'first-option' : undefined"
-          required
         />
         {{ option.label }}
       </label>
@@ -75,9 +78,18 @@ label {
   flex: 1;
   padding-left: 1.5rem;
   border-radius: 0.5rem;
+
+  &:has(input:checked) {
+    border: 1px solid var(--color-green-600);
+    background-color: var(--color-green-200);
+  }
+}
+input {
+  accent-color: var(--color-green-600);
+  width: 1.25rem;
 }
 
-fieldset[aria-invalid='true'] input[type='radio']:focus {
+fieldset[aria-invalid='true'] input[type='radio']:focus-visible {
   outline: 2px solid;
   outline-offset: 2px;
 }

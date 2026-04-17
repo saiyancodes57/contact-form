@@ -45,7 +45,7 @@ defineExpose({
       />
       {{ label }}<span aria-hidden="true">*</span>
     </label>
-    <ErrorComponent :label="label" :error="error" :error-id="errorId" />
+    <ErrorComponent :error="error" :error-id="errorId" />
   </div>
 </template>
 
@@ -60,7 +60,7 @@ span {
   color: var(--color-green-600);
 }
 
-input[type='checkbox']:focus {
+input[type='checkbox'][aria-invalid='true']:focus-visible {
   outline: 2px solid;
   outline-offset: 2px;
 }
